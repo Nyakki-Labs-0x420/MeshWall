@@ -1,0 +1,2 @@
+#!/bin/bash
+exec /home/nyakki/Desktop/meshwall/venv/bin/python -m meshwall "$@"

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard">
+    <div class="stats">
+        <div class="card">
+            <h2>Total Blocked IPs</h2>
+            <p class="big-num">{{ total_blocked }}</p>
+        </div>
+    </div>
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
+    <div class="recent-list">
+        <h2>Recently Blocked IPs</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>IP</th>
+                    <th>Country</th>
+                    <th>City</th>
+                    <th>Reason</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ip in blocked_ips %}
+                <tr>
+                    <td>{{ ip.ip }}</td>
+                    <td>{{ ip.geo_country or 'N/A' }}</td>
+                    <td>{{ ip.geo_city or 'N/A' }}</td>
+                    <td>{{ ip.reason or 'N/A' }}</td>
+                    <td>{{ ip.blocked_at.strftime('%Y-%m-%d %H:%M') if ip.blocked_at else '' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var map = L.map('map').setView([20, 0], 2);
+        L.tileLayer.offline({
+            maxZoom: 18,
+            tileSize: 256
+        }).addTo(map);
+
+        fetch('/api/map-data')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(marker => {
+                    var popupContent = '<b>' + marker.ip + '</b><br>' +
+                                       (marker.country || '') + ' ' + (marker.city || '') + '<br>' +
+                                       (marker.reason || '');
+                    L.marker([marker.lat, marker.lng]).addTo(map)
+                        .bindPopup(popupContent);
+                });
+            })
+            .catch(err => console.error('Map data fetch error:', err));
+    });
+</script>
+{% endblock %}

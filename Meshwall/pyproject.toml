@@ -1,0 +1,83 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meshwall"
+version = "1.0.0"
+description = "Adaptive, auto-updating IPtables blocklist system with active monitoring, DNS sinkhole, AI analysis, and web dashboard"
+readme = "README.md"
+license = {text = "GPL-3.0-or-later"}
+authors = [
+    {name = "Nyakki Labs", email = "nyakki-labs-0x420@proton.me"}
+]
+keywords = ["firewall", "iptables", "security", "blocklist", "intrusion-detection", "dns-sinkhole"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Networking :: Firewalls",
+    "Topic :: Security",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "aiohttp>=3.9.0",
+    "aiofiles>=23.2.0",
+    "scapy>=2.5.0",
+    "python-dotenv>=1.0.0",
+    "geoip2>=4.8.0",
+    "maxminddb>=2.5.0",
+    "textual>=0.52.0",
+    "rich>=13.7.0",
+    "click>=8.1.0",
+    "pyyaml>=6.0",
+    "structlog>=24.1.0",
+    "flask>=3.0.0",
+    "flask-sqlalchemy>=3.1.0",
+    "cryptography>=42.0.0",
+    "argon2-cffi>=23.1.0",
+    "dnspython>=2.6.0",
+    "python-Levenshtein>=0.25.0",
+    "gunicorn>=22.0.0",
+    "sqlalchemy>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "black>=24.0.0",
+    "ruff>=0.2.0",
+    "mypy>=1.8.0",
+]
+
+[project.urls]
+Homepage = "https://nyakki-labs.org/"
+Repository = "https://github.com/nyakki-labs-0X420/MeshWall"
+Issues = "https://github.com/nyakki-labs-0X420/MeshWall/issues"
+
+[project.scripts]
+meshwall = "meshwall.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ['py310', 'py311', 'py312']
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true

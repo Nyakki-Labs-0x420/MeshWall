@@ -1,0 +1,15 @@
+[Unit]
+Description=MeshWall Web Dashboard
+After=network.target meshwall-listener.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=nyakki
+WorkingDirectory=/home/nyakki/Desktop/meshwall
+ExecStart=/home/nyakki/Desktop/meshwall/venv/bin/meshwall web
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

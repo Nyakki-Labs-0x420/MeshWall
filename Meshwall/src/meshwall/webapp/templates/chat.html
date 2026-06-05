@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="chat-container">
+    <h2>AI Security Assistant</h2>
+    <div class="chat-box" id="chat-box">
+        {% for msg in history %}
+        <div class="message {{ msg.role }}">
+            <strong>{{ msg.role.capitalize() }}:</strong> {{ msg.content }}
+        </div>
+        {% endfor %}
+    </div>
+    <form id="chat-form" class="chat-input">
+        <input type="text" id="user-input" placeholder="Ask about security events..." required autocomplete="off">
+        <button type="submit" class="btn">Send</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('chat-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const input = document.getElementById('user-input');
+        const message = input.value.trim();
+        if (!message) return;
+
+        // Add user message to chat immediately
+        appendMessage('user', message);
+        input.value = '';
+        input.disabled = true;
+
+        try {
+            const response = await fetch('/chat/send', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: message})
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            appendMessage('assistant', data.message);
+        } catch (error) {
+            appendMessage('assistant', 'Error: ' + error.message);
+        } finally {
+            input.disabled = false;
+            input.focus();
+        }
+    });
+
+    function appendMessage(role, content) {
+        const chatBox = document.getElementById('chat-box');
+        const div = document.createElement('div');
+        div.className = 'message ' + role;
+        div.innerHTML = '<strong>' + role.charAt(0).toUpperCase() + role.slice(1) + ':</strong> ' + content;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
+{% endblock %}

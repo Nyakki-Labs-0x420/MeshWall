@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily MeshWall feed update
+Requires=meshwall-fetch.service
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
