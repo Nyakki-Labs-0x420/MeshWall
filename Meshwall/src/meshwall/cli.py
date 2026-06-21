@@ -153,13 +153,14 @@ def status(ctx: click.Context) -> None:
 def listen(ctx: click.Context) -> None:
     """Start the active listener daemon (port scan detection)."""
     if not check_root():
-        console.print("[red]Error: This command requires root privileges (packet capture).[/]")
+        console.print("[red]Error: This command requires root privileges.[/]")
         console.print("[yellow]Run with: sudo meshwall listen[/]")
         sys.exit(1)
 
     cfg = ctx.obj["config"]
-    console.print("[bold green]Starting MeshWall active listener...[/]")
-    daemon = ListenerDaemon(cfg)
+    console.print("[bold green]Starting MeshWall active listener (NFLOG)...[/]")
+    from meshwall.listener_nflog import LightListener
+    daemon = LightListener(cfg)
     try:
         asyncio.run(daemon.start())
     except KeyboardInterrupt:
