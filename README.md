@@ -171,6 +171,22 @@ meshwall ask "Which countries are scanning me the most?"
 
 The AI chat on the web dashboard also uses this integration.
 
+### AI Chat & Assistant
+
+The web dashboard includes a chat interface that connects to a local Ollama model. The assistant answers questions about your MeshWall system using live data from the database; blocked IPs, recent scans, top attacking countries, and individual attacker geolocation.
+
+**Model choice:**  
+MeshWall uses an **uncensored** model to avoid refusal patterns. The default is `artifish/llama3.2-uncensored:latest` (3.6B parameters, ~2.2 GB). It runs comfortably on any machine with 8 GB RAM, including Raspberry Pi 5, mini PCs, and laptops.
+
+To change the model, edit the `MODEL` variable in `meshwall/webapp/blueprints/ai_chat.py` or set the `OLLAMA_MODEL` environment variable. Other recommended small uncensored models:
+
+- `dolphin3.0-mistral-7b:q4_K_M`
+- `hermes3:8b-llama3.1-q4_K_M`
+- `qwen2.5-coder:7b-instruct-q4_K_M`
+- `tinyllama:latest` (lightest)
+
+**No data leaves your machine** ; all inference runs locally.
+
 ---
 
 ## Docker Deployment
